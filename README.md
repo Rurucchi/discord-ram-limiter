@@ -1,5 +1,11 @@
 
+
 # Discord Ram Limiter
+Fork of "Discord Ram Limiter" by faraj, miaf and UncleTyrone.
+- Added support for DiscordPTB and Discord Canary.
+
+Original `readme.md`:
+
 A program that limits the memory usage of Discord by preventing unnecessary cache with the function  ```SetProcessWorkingSetSize()```
 
 # Revision
@@ -14,5 +20,5 @@ All credit to the original creators faraj and miaf! You can find their original 
 ![alt text](https://raw.githubusercontent.com/UncleTyrone/discord-ram-limiter/main/Screenshots/Process.png)
 ![alt text](https://raw.githubusercontent.com/UncleTyrone/discord-ram-limiter/main/Screenshots/Tray.png)
 
-# Release
-[Download here!](https://github.com/UncleTyrone/discord-ram-limiter/releases/tag/2)
+<!-- # Release
+[Download here!](https://github.com/UncleTyrone/discord-ram-limiter/releases/tag/2) -->
