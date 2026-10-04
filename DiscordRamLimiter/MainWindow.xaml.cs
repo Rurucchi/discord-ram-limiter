@@ -1,16 +1,18 @@
+using DiscordRamLimiter.Models;
+using DiscordRamLimiter.Services;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Security;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
-using DiscordRamLimiter.Models;
-using DiscordRamLimiter.Services;
 using Drawing = System.Drawing;
 using Drawing2D = System.Drawing.Drawing2D;
 using Forms = System.Windows.Forms;
@@ -434,5 +436,29 @@ public partial class MainWindow : Window, IDisposable
         _trayIcon.Dispose();
         _customTrayIcon?.Dispose();
         _limiterService.Dispose();
+    }
+
+    private void CurrentRamText1_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+    {
+
+    }
+
+    private void RamLimitText1_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+    {
+
+        long GCTriggerLimit = 0;
+        bool success = long.TryParse(RamLimitText1.Text, out GCTriggerLimit);
+        if(success)
+        {
+            // Convert MB to Bytes
+            _limiterService.GCTriggerLimit = GCTriggerLimit * 1024L * 1024L;
+        }
+        Debug.WriteLine("Test");
+    }
+
+    private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
+    {
+        Regex regex = new Regex("[^0-9]+");
+        e.Handled = regex.IsMatch(e.Text);
     }
 }

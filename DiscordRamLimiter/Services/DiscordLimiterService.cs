@@ -24,6 +24,7 @@ public sealed class DiscordLimiterService : IDisposable
     public event EventHandler<DiscordMemorySnapshot>? SnapshotUpdated;
 
     public bool IsLimiterActive { get; private set; }
+    public long GCTriggerLimit = 0;
 
     [DllImport("kernel32.dll")]
     private static extern bool SetProcessWorkingSetSize(IntPtr proc, int min, int max);
@@ -89,8 +90,7 @@ public sealed class DiscordLimiterService : IDisposable
         while (!cancellationToken.IsCancellationRequested)
         {
             var beforeBytes = GetTotalDiscordWorkingSetBytes(out var processCount);
-
-            if (IsLimiterActive && processCount > 0)
+            if (IsLimiterActive && processCount > 0 && (beforeBytes > GCTriggerLimit))
             {
                 LimitDiscordMemory();
 

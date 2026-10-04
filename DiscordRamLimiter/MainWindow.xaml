@@ -3,9 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Discord RAM Limiter"
         Width="430"
-        Height="600"
+        Height="730"
         MinWidth="430"
-        MinHeight="600"
+        MinHeight="730"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
@@ -271,6 +271,41 @@
                         </Border>
                     </Grid>
                 </Button>
+                
+                <Border
+                    Margin="0,26,0,0"
+                    Width="286"
+                    CornerRadius="18"
+                    Background="#1B2231"
+                    BorderBrush="#2A3448"
+                    BorderThickness="1"
+                    Padding="20,18">
+                    <StackPanel HorizontalAlignment="Center">
+                        <TextBlock Text="LIMIT (MB)"
+                            Foreground="#8C98B3"
+                            FontSize="11"
+                            FontWeight="Bold"
+                            HorizontalAlignment="Center" />
+                        <TextBox x:Name="RamLimitText1" 
+                            PreviewTextInput="NumberValidationTextBox"
+                            Text="0"
+                            MaxLength="4"
+                            Margin="0,8,0,0"
+                            Width="140"
+                            Background="#161b27"
+                            Foreground="White"
+                            FontSize="30"
+                            TextAlignment="Center"
+                            FontWeight="Bold" TextChanged="RamLimitText1_TextChanged" UndoLimit="10" AllowDrop="False" HorizontalAlignment="Center">
+                        <TextBox.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="3"/>
+                                    <Setter Property="BorderBrush" Value="#1B2231"/>
+                                </Style>
+                        </TextBox.Resources>
+                        </TextBox>
+                    </StackPanel>
+                </Border>
 
                 <Border Margin="0,26,0,0"
                         Width="286"
