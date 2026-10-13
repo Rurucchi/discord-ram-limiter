@@ -25,12 +25,14 @@ namespace DiscordRamLimiter;
 public partial class MainWindow : Window, IDisposable
 {
     private readonly DiscordLimiterService _limiterService = new();
+    private readonly ConfigLoaderService _configLoaderService = new();
     private readonly Forms.NotifyIcon _trayIcon;
     private readonly Drawing.Icon? _customTrayIcon;
     private readonly bool _startMinimized;
     private readonly Forms.ToolStripMenuItem _startupMenuItem;
     private bool _isExitRequested;
     private bool _isMinimizingToTray;
+    private bool triggerLimitCooldown = false;
 
     public MainWindow(bool startMinimized = false)
     {
@@ -44,6 +46,25 @@ public partial class MainWindow : Window, IDisposable
         _limiterService.SnapshotUpdated += LimiterService_SnapshotUpdated;
     }
 
+    private void configSetup()
+    {
+        string configFileGCTriggerLimit = _configLoaderService.start();
+        RamLimitText1.Text = configFileGCTriggerLimit;
+        long GCTriggerLimit = 0;
+        bool success = long.TryParse(configFileGCTriggerLimit, out GCTriggerLimit);
+        if (success)
+        {
+            // Convert MB to Bytes
+            _limiterService.GCTriggerLimit = GCTriggerLimit * 1024L * 1024L;
+        }
+    }
+
+    private async void changeConfig()
+    {
+        await Task.Delay(5000);
+        _configLoaderService.changeConfigSetting(RamLimitText1.Text);
+    }
+
     private async void Window_Loaded(object sender, RoutedEventArgs e)
     {
         await _limiterService.StartAsync();
@@ -51,11 +72,14 @@ public partial class MainWindow : Window, IDisposable
         AnimateToggle(_startMinimized, durationMs: 1);
         UpdateStatus(_startMinimized);
         RefreshStartupState();
+        configSetup();
 
         if (_startMinimized)
         {
             MinimizeToTray(showNotification: false);
         }
+
+        bool test = _configLoaderService.configFileExists();
     }
 
     private void LimiterToggleButton_Click(object sender, RoutedEventArgs e)
@@ -445,15 +469,14 @@ public partial class MainWindow : Window, IDisposable
 
     private void RamLimitText1_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
     {
-
         long GCTriggerLimit = 0;
         bool success = long.TryParse(RamLimitText1.Text, out GCTriggerLimit);
-        if(success)
+        if (success)
         {
             // Convert MB to Bytes
             _limiterService.GCTriggerLimit = GCTriggerLimit * 1024L * 1024L;
+            changeConfig();
         }
-        Debug.WriteLine("Test");
     }
 
     private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
